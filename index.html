@@ -3,32 +3,118 @@
   
 </head>
 <body>
+  <div class="app">
+    <div id="grid" class="grid"></div>
 
-  <button id="predict">Predict</button>
-  <p id="output"></p>
+    <div class="controls">
+      <button py-click="predict_letter">Predict</button>
+      <button py-click="clear_grid">Clear</button>
+      <button py-click="load_t_example">T</button>
+      <button py-click="load_l_example">L</button>
+    </div>
+
+    <div id="output" class="result"></div>
+    <div id="vector-output" class="vector"></div>
+  </div>
+
+ <py-script>
+from js import document
+
+weights = [0, 1, 1, 1,
+           -1, 1, 1, 0,
+           -1, 1, 1, 0,
+           -1, 0, 0, -1]
+bias = -1.5
+
+T_EXAMPLE = [1, 1, 1, 1,
+             0, 1, 0, 0,
+             0, 1, 0, 0,
+             0, 1, 0, 0]
+
+L_EXAMPLE = [1, 0, 0, 0,
+             1, 0, 0, 0,
+             1, 0, 0, 0,
+             1, 1, 1, 1]
+
+
+def activation_function(z):
+    return 1 if z >= 0 else 0
+
+
+def dot_product(a, b):
+    return sum(x * y for x, y in zip(a, b))
+
+
+def get_inputs():
+    values = []
+    for i in range(16):
+        cell = document.getElementById(f"cell-{i}")
+        values.append(1 if cell.classList.contains("active") else 0)
+    return values
+
+
+def set_inputs(values):
+    for i, value in enumerate(values):
+        cell = document.getElementById(f"cell-{i}")
+        if value == 1:
+            cell.classList.add("active")
+        else:
+            cell.classList.remove("active")
+    update_vector_display()
+
+
+def update_vector_display():
+    document.getElementById("vector-output").textContent = str(get_inputs())
+
+
+def predict_letter(event=None):
+    inputs = get_inputs()
+    score = dot_product(inputs, weights) + bias
+    y_pred = activation_function(score)
+    label = "T" if y_pred == 1 else "L"
+    document.getElementById("output").textContent = f"{label}"
+    update_vector_display()
+
+
+def clear_grid(event=None):
+    set_inputs([0] * 16)
+    document.getElementById("output").textContent = ""
+
+
+def load_t_example(event=None):
+    set_inputs(T_EXAMPLE)
+    document.getElementById("output").textContent = ""
+
+
+def load_l_example(event=None):
+    set_inputs(L_EXAMPLE)
+    document.getElementById("output").textContent = ""
+  </py-script>
 
   <script>
-    weights = Array(16).fill(0);
-    weights[0] = ?? ;
-    weights[1] = ?? ;
-    ...
-    weights[15] = ??;
-    
-    bias = ?? ;
+    const grid = document.getElementById("grid");
 
-    activation_function(z) {
-        return z >= 0 ? 1 : -1;
-    }
-    
-    predict( inputs ) {
-          let linear_product = np.dot(inputs, weights) + bias    
-          y_pred  = activation_function(    linear_product    );
-          return y_pred
+    function updateVector() {
+      const values = [];
+      for (let j = 0; j < 16; j++) {
+        values.push(document.getElementById(`cell-${j}`).classList.contains("active") ? 1 : 0);
+      }
+      document.getElementById("vector-output").textContent = JSON.stringify(values);
     }
 
+    for (let i = 0; i < 16; i++) {
+      const cell = document.createElement("button");
+      cell.id = `cell-${i}`;
+      cell.className = "cell";
+      cell.type = "button";
+      cell.addEventListener("click", () => {
+        cell.classList.toggle("active");
+        updateVector();
+      });
+      grid.appendChild(cell);
+    }
 
-   
-    
+    updateVector();
   </script>
     
 </body>
