@@ -1,6 +1,70 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perceptron L vs T</title>
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #fff;
+    }
+    .app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 56px);
+      gap: 8px;
+    }
+    .cell {
+      width: 56px;
+      height: 56px;
+      border: 1px solid #222;
+      background: #fff;
+      cursor: pointer;
+    }
+    .cell.active {
+      background: #111;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #222;
+      background: #fff;
+      cursor: pointer;
+    }
+    .result {
+      min-height: 24px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .vector {
+      font-size: 12px;
+      max-width: 280px;
+      text-align: center;
+      word-break: break-word;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
